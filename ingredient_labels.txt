@@ -105,8 +105,116 @@ avocado
 strawberry
 blueberry
 raspberry
-<<<<<<< HEAD
-coconut
-=======
-coconut
->>>>>>> 3c7c145 (Add ingredient_labels.txt and filter logic)
+shallot
+green onion
+chive
+dill
+basil
+mint
+cilantro
+parsley
+lemongrass
+ginger
+galangal
+perilla leaf
+tamarind
+kimchi
+miso paste
+gochujang
+doenjang
+dashi
+mirin
+sake
+anchovy
+anchovy paste
+black bean sauce
+fermented bean curd
+fermented shrimp paste
+five-spice powder
+nutmeg
+cardamom
+fenugreek
+mustard seed
+sage
+rosemary
+thyme
+oregano
+bay leaf
+vanilla
+vanilla extract
+honey
+molasses
+brown sugar
+pickles
+sun-dried tomato
+artichoke
+arugula
+fennel
+leek
+beet
+chickpea
+lentil
+quinoa
+barley
+oat
+couscous
+baking soda
+baking powder
+cornstarch
+gelatin
+agar agar
+almond
+cashew
+walnut
+pistachio
+hazelnut
+chia seed
+flaxseed
+pumpkin seed
+sunflower seed
+coconut milk
+evaporated milk
+condensed milk
+matcha powder
+cocoa powder
+instant coffee
+espresso
+rum
+brandy
+tabasco
+sriracha
+truffle oil
+tahini
+wasabi
+nori
+kombu
+wakame
+soba
+ramen
+pho noodle
+rice paper
+spring roll wrapper
+dumpling wrapper
+wonton wrapper
+mochi
+red bean paste
+lotus seed
+mung bean
+bread crumb
+panko
+parmesan
+ricotta
+mozzarella
+gouda
+feta
+tempeh
+seitan
+jackfruit
+durian
+longan
+lychee
+dragon fruit
+passion fruit
+star fruit
+sapodilla
+rambutan
