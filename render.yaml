@@ -1,3 +1,4 @@
+
 services:
   - type: web
     name: ingredient-api
@@ -9,3 +10,16 @@ services:
     envVars:
       - key: PYTHONUNBUFFERED
         value: '1'
+
+services:
+  - type: web
+    name: ingredient-api
+    env: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: '1'
+
