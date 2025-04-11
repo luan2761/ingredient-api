@@ -5,61 +5,59 @@ from ultralytics import YOLO
 import io
 import logging
 
-# Force redeploy - YOLOv8n version ✅
-
-# Cấu hình logger để xem log trên Render
+# Cấu hình logger để hiển thị log trên Render
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# Đọc danh sách nhãn nguyên liệu từ file
+# Load danh sách nhãn nguyên liệu
 try:
     with open("ingredient_labels.txt", "r", encoding="utf-8") as f:
         ingredient_labels = set([line.strip().lower() for line in f])
-    logger.info(f"📦 Đã tải {len(ingredient_labels)} nhãn nguyên liệu")
+    logger.info(f"📦 Đã tải {len(ingredient_labels)} nhãn nguyên liệu.")
 except Exception as e:
-    logger.exception("❌ Lỗi khi đọc ingredient_labels.txt")
+    logger.exception("❌ Không thể đọc file ingredient_labels.txt.")
     ingredient_labels = set()
 
-# Load YOLOv8n model
+# Load mô hình YOLOv8n đã fine-tuned nếu có, nếu không sẽ dùng mặc định
 try:
-    model = YOLO("yolov8n.pt")  # Tự động tải nếu chưa có
-    logger.info("✅ YOLOv8n model đã được load")
-    logger.info(f"🔍 Model classes: {model.names}")
+    model = YOLO("yolov8n.pt")
+    logger.info("✅ Đã load mô hình YOLOv8n.")
 except Exception as e:
-    logger.exception("❌ Không thể load YOLOv8n model")
+    logger.exception("❌ Không thể load YOLOv8n.")
 
 @app.get("/")
-def read_root():
-    return {"message": "Chào mừng đến với API nhận diện nguyên liệu bằng YOLOv8n!"}
+def home():
+    return {"message": "🍜 Chào mừng đến với API nhận diện nguyên liệu bằng YOLOv8n!"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     try:
-        logger.info("📥 Nhận file: %s", file.filename)
+        logger.info(f"📥 Nhận file: {file.filename}")
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
 
-        logger.info("🚀 Đang chạy YOLOv8n...")
-        results = model(image)
-        logger.info("✅ YOLOv8n trả về kết quả")
+        # Dự đoán bằng YOLOv8
+        logger.info("🚀 Đang nhận diện bằng YOLOv8n...")
+        results = model(image)[0]  # Lấy kết quả đầu tiên
 
         result_list = []
-        for r in results:
-            for box in r.boxes:
-                label = model.names[int(box.cls)]
-                confidence = float(box.conf)
-                is_ingredient = label.lower() in ingredient_labels
-                result_list.append({
-                    "label": label,
-                    "confidence": f"{confidence * 100:.2f}%",
-                    "is_ingredient": is_ingredient
-                })
+        for box in results.boxes:
+            cls_id = int(box.cls)
+            label = model.names[cls_id]
+            confidence = float(box.conf)
+            is_ingredient = label.lower() in ingredient_labels
 
-        logger.info("🎯 Kết quả nhận diện: %s", result_list)
+            result_list.append({
+                "label": label,
+                "confidence": f"{confidence * 100:.2f}%",
+                "is_ingredient": is_ingredient
+            })
+
+        logger.info("✅ Nhận diện xong. Kết quả: %s", result_list)
         return JSONResponse(content={"results": result_list})
 
     except Exception as e:
-        logger.exception("❌ Lỗi khi xử lý ảnh")
+        logger.exception("❌ Lỗi xử lý ảnh.")
         return JSONResponse(content={"error": str(e)}, status_code=500)
