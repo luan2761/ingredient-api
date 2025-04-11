@@ -1,10 +1,8 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from PIL import Image
+from ultralytics import YOLO
 import io
-import torchvision.transforms as transforms
-import torchvision.models as models
-import torch
 
 app = FastAPI()
 
@@ -12,49 +10,35 @@ app = FastAPI()
 with open("ingredient_labels.txt", "r", encoding="utf-8") as f:
     ingredient_labels = set([line.strip().lower() for line in f])
 
-# Load mô hình ResNet pretrained
-from torchvision.models import ResNet50_Weights
-weights = ResNet50_Weights.DEFAULT
-model = models.resnet50(weights=weights)
-model.eval()
-
-# Lấy danh sách nhãn từ ImageNet
-categories = weights.meta["categories"]
-
-# Hàm xử lý ảnh
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-])
+# Load YOLOv8n model
+model = YOLO("yolov8n.pt")  # Tự động tải nếu chưa có
 
 @app.get("/")
 def read_root():
-    return {"message": "Chào mừng đến với API nhận diện nguyên liệu!"}
+    return {"message": "Chào mừng đến với API nhận diện nguyên liệu bằng YOLOv8n!"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     try:
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        input_tensor = transform(image).unsqueeze(0)
 
-        with torch.no_grad():
-            outputs = model(input_tensor)
-            probs = torch.nn.functional.softmax(outputs[0], dim=0)
+        # Dự đoán với YOLOv8n
+        results = model(image)
+        result_list = []
 
-        # Lấy top 5 kết quả
-        top5 = torch.topk(probs, 5)
-        result = []
-        for idx, prob in zip(top5.indices, top5.values):
-            label = categories[idx]
-            is_ingredient = label.lower() in ingredient_labels
-            result.append({
-                "label": label,
-                "confidence": f"{prob.item()*100:.2f}%",
-                "is_ingredient": is_ingredient
-            })
+        for r in results:
+            for box in r.boxes:
+                label = model.names[int(box.cls)]
+                confidence = float(box.conf)
+                is_ingredient = label.lower() in ingredient_labels
+                result_list.append({
+                    "label": label,
+                    "confidence": f"{confidence * 100:.2f}%",
+                    "is_ingredient": is_ingredient
+                })
 
-        return JSONResponse(content={"results": result})
+        return JSONResponse(content={"results": result_list})
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
