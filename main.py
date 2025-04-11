@@ -8,7 +8,11 @@ import torch
 
 app = FastAPI()
 
-# Dùng mô hình ResNet pretrained
+# Đọc danh sách nhãn nguyên liệu từ file
+with open("ingredient_labels.txt", "r", encoding="utf-8") as f:
+    ingredient_labels = set([line.strip().lower() for line in f])
+
+# Load mô hình ResNet pretrained
 from torchvision.models import ResNet50_Weights
 weights = ResNet50_Weights.DEFAULT
 model = models.resnet50(weights=weights)
@@ -25,7 +29,7 @@ transform = transforms.Compose([
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to Ingredient Recognition API"}
+    return {"message": "Chào mừng đến với API nhận diện nguyên liệu!"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
@@ -42,9 +46,12 @@ async def predict(file: UploadFile = File(...)):
         top5 = torch.topk(probs, 5)
         result = []
         for idx, prob in zip(top5.indices, top5.values):
+            label = categories[idx]
+            is_ingredient = label.lower() in ingredient_labels
             result.append({
-                "label": categories[idx],
-                "confidence": f"{prob.item()*100:.2f}%"
+                "label": label,
+                "confidence": f"{prob.item()*100:.2f}%",
+                "is_ingredient": is_ingredient
             })
 
         return JSONResponse(content={"results": result})
