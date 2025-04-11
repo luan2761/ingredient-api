@@ -105,4 +105,8 @@ avocado
 strawberry
 blueberry
 raspberry
+<<<<<<< HEAD
 coconut
+=======
+coconut
+>>>>>>> 3c7c145 (Add ingredient_labels.txt and filter logic)
