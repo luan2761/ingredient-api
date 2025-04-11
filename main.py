@@ -5,6 +5,8 @@ from ultralytics import YOLO
 import io
 import logging
 
+# Force redeploy - YOLOv8n version ✅
+
 # Cấu hình logger để xem log trên Render
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
