@@ -12,6 +12,7 @@ with open("ingredient_labels.txt", "r", encoding="utf-8") as f:
 
 # Load YOLOv8n model
 model = YOLO("yolov8n.pt")  # Tự động tải nếu chưa có
+print(model)  # Hiển thị YOLOv8n summary trong log khi khởi động
 
 @app.get("/")
 def read_root():
@@ -20,10 +21,11 @@ def read_root():
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     try:
+        # Đọc ảnh từ request
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
 
-        # Dự đoán với YOLOv8n
+        # Dự đoán bằng mô hình YOLO
         results = model(image)
         result_list = []
 
