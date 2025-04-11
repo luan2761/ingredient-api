@@ -1,0 +1,108 @@
+onion
+garlic
+beef
+pork
+chicken
+duck
+fish
+salmon
+tuna
+catfish
+shrimp
+squid
+octopus
+crab
+clam
+mussel
+snail
+carrot
+potato
+sweet potato
+taro
+tomato
+cucumber
+zucchini
+eggplant
+broccoli
+cauliflower
+cabbage
+lettuce
+spinach
+bok choy
+kale
+choy sum
+water spinach
+bean sprout
+radish
+daikon
+bell pepper
+chili
+mushroom
+shiitake mushroom
+enoki mushroom
+oyster mushroom
+corn
+green bean
+pea
+pumpkin
+winter melon
+bitter melon
+tofu
+egg
+milk
+butter
+cheese
+cream
+yogurt
+flour
+rice
+sticky rice
+noodle
+vermicelli
+glass noodle
+udon
+pasta
+bread
+salt
+sugar
+pepper
+chili powder
+curry powder
+turmeric
+paprika
+cumin
+coriander
+cinnamon
+star anise
+bay leaf
+clove
+garlic powder
+onion powder
+soy sauce
+fish sauce
+oyster sauce
+hoisin sauce
+vinegar
+rice vinegar
+cooking wine
+sesame oil
+olive oil
+vegetable oil
+peanut oil
+palm oil
+lemon
+lime
+orange
+apple
+banana
+mango
+pineapple
+papaya
+grape
+watermelon
+melon
+avocado
+strawberry
+blueberry
+raspberry
+coconut
